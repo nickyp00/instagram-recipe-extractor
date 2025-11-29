@@ -98,27 +98,35 @@ def extract_caption():
         response = requests.post(apify_url, json=payload, headers=headers, timeout=60)
         
         print(f"Apify response status: {response.status_code}", file=sys.stderr)
-        print(f"Apify response body (first 500 chars): {response.text[:500]}", file=sys.stderr)
+        print(f"Apify response body (first 1000 chars): {response.text[:1000]}", file=sys.stderr)
         
-        # Check if request was successful
-        if response.status_code != 200:
-            error_message = 'Failed to extract caption from Instagram'
-            try:
-                error_data = response.json()
-                print(f"Apify error data: {error_data}", file=sys.stderr)
-                if 'error' in error_data:
-                    error_message = error_data['error'].get('message', error_message)
-            except Exception as e:
-                print(f"Could not parse error response: {e}", file=sys.stderr)
-            
-            print(f"ERROR: {error_message}", file=sys.stderr)
+        # Try to parse response regardless of status code
+        try:
+            results = response.json()
+            print(f"Parsed JSON response, type: {type(results)}", file=sys.stderr)
+        except Exception as e:
+            print(f"Could not parse JSON response: {e}", file=sys.stderr)
+            return jsonify({
+                'success': False,
+                'error': f'Invalid response from Apify: {str(e)}'
+            }), 500
+        
+        # Check if response is an error object with 'error' field
+        if isinstance(results, dict) and 'error' in results:
+            error_message = results['error'].get('message', 'Unknown error from Apify')
+            print(f"ERROR: Apify returned error: {error_message}", file=sys.stderr)
             return jsonify({
                 'success': False,
                 'error': error_message
             }), response.status_code
         
-        # Parse response
-        results = response.json()
+        # Response should be a list of results
+        if not isinstance(results, list):
+            print(f"ERROR: Unexpected response type: {type(results)}", file=sys.stderr)
+            return jsonify({
+                'success': False,
+                'error': 'Unexpected response format from Apify'
+            }), 500
         print(f"Apify returned {len(results)} results", file=sys.stderr)
         
         # Check if we got results
