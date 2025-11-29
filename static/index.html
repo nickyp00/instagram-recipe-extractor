@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Recipe Extractor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            color: #667eea;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            display: none;
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .error.show {
+            display: block;
+        }
+        
+        .result {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .result-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .copy-btn {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+            width: auto;
+        }
+        
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+        
+        .copy-btn.copied {
+            background: #4caf50;
+        }
+        
+        .recipe-box {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .meta-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .meta-item {
+            text-align: center;
+        }
+        
+        .meta-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .meta-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .instagram-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .instagram-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .meta-info {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍝 Instagram Recipe Extractor</h1>
+        <p class="subtitle">Extract recipe captions from Instagram Reels and Posts</p>
+        
+        <div class="input-group">
+            <label for="instagram-url">Instagram URL</label>
+            <input 
+                type="text" 
+                id="instagram-url" 
+                placeholder="https://www.instagram.com/reel/ABC123/"
+                autocomplete="off"
+            >
+        </div>
+        
+        <button id="extract-btn" onclick="extractRecipe()">Extract Recipe</button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Extracting recipe from Instagram...</p>
+        </div>
+        
+        <div class="error" id="error"></div>
+        
+        <div class="result" id="result">
+            <div class="result-header">
+                <div class="result-title">Recipe Caption</div>
+                <button class="copy-btn" id="copy-btn" onclick="copyRecipe()">Copy</button>
+            </div>
+            <div class="recipe-box" id="recipe-text"></div>
+            
+            <div class="meta-info" id="meta-info"></div>
+            
+            <a href="#" id="instagram-link" class="instagram-link" target="_blank">View on Instagram →</a>
+        </div>
+    </div>
+    
+    <script>
+        async function extractRecipe() {
+            const urlInput = document.getElementById('instagram-url');
+            const url = urlInput.value.trim();
+            
+            // Reset UI
+            document.getElementById('error').classList.remove('show');
+            document.getElementById('result').classList.remove('show');
+            
+            // Validate URL
+            if (!url) {
+                showError('Please enter an Instagram URL');
+                return;
+            }
+            
+            if (!url.includes('instagram.com')) {
+                showError('Please enter a valid Instagram URL');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('extract-btn').disabled = true;
+            
+            try {
+                // Call backend API
+                const response = await fetch('/extract', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Failed to extract recipe');
+                }
+                
+                // Display results
+                displayRecipe(data.data);
+                
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('extract-btn').disabled = false;
+            }
+        }
+        
+        function displayRecipe(data) {
+            document.getElementById('recipe-text').textContent = data.caption || 'No caption found';
+            document.getElementById('instagram-link').href = data.url;
+            
+            // Build meta info
+            const metaHTML = `
+                <div class="meta-item">
+                    <div class="meta-label">Creator</div>
+                    <div class="meta-value">@${data.username}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Likes</div>
+                    <div class="meta-value">${data.likes === -1 ? 'Hidden' : data.likes.toLocaleString()}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Comments</div>
+                    <div class="meta-value">${data.comments.toLocaleString()}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Views</div>
+                    <div class="meta-value">${data.views.toLocaleString()}</div>
+                </div>
+            `;
+            
+            document.getElementById('meta-info').innerHTML = metaHTML;
+            document.getElementById('result').classList.add('show');
+        }
+        
+        function showError(message) {
+            const errorEl = document.getElementById('error');
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+        }
+        
+        function copyRecipe() {
+            const recipeText = document.getElementById('recipe-text').textContent;
+            navigator.clipboard.writeText(recipeText).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        // Allow pressing Enter to submit
+        document.getElementById('instagram-url').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                extractRecipe();
+            }
+        });
+    </script>
+</body>
+</html>
