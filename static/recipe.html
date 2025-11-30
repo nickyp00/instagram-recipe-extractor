@@ -21,6 +21,47 @@
             justify-content: center;
         }
         
+        .support-banner {
+            background: linear-gradient(135deg, #FFDD00 0%, #FFA500 100%);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+        }
+        
+        .banner-text {
+            color: #000;
+            font-size: 0.95rem;
+            font-weight: 500;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .banner-btn {
+            padding: 10px 20px;
+            background: #000;
+            color: #FFDD00;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+            white-space: nowrap;
+        }
+        
+        .banner-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .banner-btn::before {
+            content: "☕ ";
+        }
+        
         .container {
             background: white;
             border-radius: 20px;
@@ -28,6 +69,23 @@
             max-width: 800px;
             width: 100%;
             padding: 40px;
+        }
+        
+        .nav-home {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .nav-home:hover {
+            text-decoration: underline;
+        }
+        
+        .nav-home::before {
+            content: "← ";
         }
         
         h1 {
@@ -235,13 +293,33 @@
             .meta-info {
                 grid-template-columns: 1fr 1fr;
             }
+            
+            .support-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .banner-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🍝 Instagram Recipee Extractor</h1>
-        <p class="subtitle">Extract recipee captions from Instagram Reels and Posts</p>
+        <a href="/" class="nav-home">Back to Home</a>
+        
+        <div class="support-banner">
+            <div class="banner-text">
+                Similar apps charge $5+/month. You can decide how much you want to give to support this project.
+            </div>
+            <a href="https://buymeacoffee.com/nickyp00" target="_blank" class="banner-btn">
+                Buy Me a Coffee
+            </a>
+        </div>
+        
+        <h1>🍝 Instagram Recipe Extractor</h1>
+        <p class="subtitle">Extract recipe captions from Instagram Reels and Posts</p>
         
         <div class="input-group">
             <label for="instagram-url">Instagram URL</label>
@@ -253,18 +331,18 @@
             >
         </div>
         
-        <button id="extract-btn" onclick="extractRecipe()">Extract Recipee</button>
+        <button id="extract-btn" onclick="extractRecipe()">Extract Recipe</button>
         
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>Extracting recipee from Instagram...</p>
+            <p>Extracting recipe from Instagram...</p>
         </div>
         
         <div class="error" id="error"></div>
         
         <div class="result" id="result">
             <div class="result-header">
-                <div class="result-title">Recipee Caption</div>
+                <div class="result-title">Recipe Caption</div>
                 <button class="copy-btn" id="copy-btn" onclick="copyRecipe()">Copy</button>
             </div>
             <div class="recipe-box" id="recipe-text"></div>
@@ -300,26 +378,24 @@
             document.getElementById('extract-btn').disabled = true;
             
             try {
-                // Call backend API
                 const response = await fetch('/extract', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ url: url })
                 });
                 
                 const data = await response.json();
                 
-                if (!response.ok || !data.success) {
-                    throw new Error(data.error || 'Failed to extract recipe');
+                if (data.success) {
+                    displayRecipe(data.data);
+                } else {
+                    showError(data.error || 'Failed to extract recipe');
                 }
-                
-                // Display results
-                displayRecipe(data.data);
-                
             } catch (error) {
-                showError(error.message);
+                showError('Network error. Please try again.');
+                console.error('Error:', error);
             } finally {
                 document.getElementById('loading').classList.remove('show');
                 document.getElementById('extract-btn').disabled = false;
@@ -327,54 +403,74 @@
         }
         
         function displayRecipe(data) {
+            // Display caption
             document.getElementById('recipe-text').textContent = data.caption || 'No caption found';
-            document.getElementById('instagram-link').href = data.url;
             
-            // Build meta info
-            const metaHTML = `
+            // Display metadata
+            const metaInfo = document.getElementById('meta-info');
+            metaInfo.innerHTML = `
                 <div class="meta-item">
                     <div class="meta-label">Creator</div>
                     <div class="meta-value">@${data.username}</div>
                 </div>
                 <div class="meta-item">
                     <div class="meta-label">Likes</div>
-                    <div class="meta-value">${data.likes === -1 ? 'Hidden' : data.likes.toLocaleString()}</div>
+                    <div class="meta-value">${formatNumber(data.likes)}</div>
                 </div>
                 <div class="meta-item">
                     <div class="meta-label">Comments</div>
-                    <div class="meta-value">${data.comments.toLocaleString()}</div>
+                    <div class="meta-value">${formatNumber(data.comments)}</div>
                 </div>
+                ${data.views ? `
                 <div class="meta-item">
                     <div class="meta-label">Views</div>
-                    <div class="meta-value">${data.views.toLocaleString()}</div>
+                    <div class="meta-value">${formatNumber(data.views)}</div>
                 </div>
+                ` : ''}
             `;
             
-            document.getElementById('meta-info').innerHTML = metaHTML;
+            // Set Instagram link
+            document.getElementById('instagram-link').href = data.url;
+            
+            // Show result
             document.getElementById('result').classList.add('show');
-        }
-        
-        function showError(message) {
-            const errorEl = document.getElementById('error');
-            errorEl.textContent = message;
-            errorEl.classList.add('show');
+            
+            // Reset copy button
+            const copyBtn = document.getElementById('copy-btn');
+            copyBtn.textContent = 'Copy';
+            copyBtn.classList.remove('copied');
         }
         
         function copyRecipe() {
             const recipeText = document.getElementById('recipe-text').textContent;
             navigator.clipboard.writeText(recipeText).then(() => {
-                const btn = document.getElementById('copy-btn');
-                btn.textContent = 'Copied!';
-                btn.classList.add('copied');
+                const copyBtn = document.getElementById('copy-btn');
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
                 
                 setTimeout(() => {
-                    btn.textContent = 'Copy';
-                    btn.classList.remove('copied');
+                    copyBtn.textContent = 'Copy';
+                    copyBtn.classList.remove('copied');
                 }, 2000);
             });
         }
         
-        // Allow pressing Enter to submit
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+        }
+        
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+        
+        // Allow Enter key to submit
         document.getElementById('instagram-url').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 extractRecipe();
