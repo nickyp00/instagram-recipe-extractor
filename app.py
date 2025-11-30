@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import requests
 import os
-import time
 import sys
 
 app = Flask(__name__, static_folder='static')
@@ -12,9 +11,14 @@ CORS(app)
 APIFY_TOKEN = os.environ.get('APIFY_TOKEN', '')
 
 @app.route('/')
-def index():
-    """Serve the main HTML page"""
-    return send_from_directory('static', 'index.html')
+def home():
+    """Serve the home page"""
+    return send_from_directory('static', 'home.html')
+
+@app.route('/recipe')
+def recipe():
+    """Serve the recipe extractor page"""
+    return send_from_directory('static', 'recipe.html')
 
 @app.route('/health', methods=['GET'])
 def health():
@@ -27,14 +31,7 @@ def health():
 
 @app.route('/extract', methods=['POST'])
 def extract_caption():
-    """
-    Extract caption from Instagram reel
-    
-    Expected JSON body:
-    {
-        "url": "https://www.instagram.com/reel/ABC123/"
-    }
-    """
+    """Extract caption from Instagram reel"""
     
     # Validate API token is configured
     if not APIFY_TOKEN:
@@ -76,7 +73,6 @@ def extract_caption():
         print(f"===== EXTRACTION STARTED =====", file=sys.stderr)
         print(f"Instagram URL: {instagram_url}", file=sys.stderr)
         print(f"Token configured: {bool(APIFY_TOKEN)}", file=sys.stderr)
-        print(f"Token first 20 chars: {APIFY_TOKEN[:20]}...", file=sys.stderr)
         
         # Call Apify API (synchronous endpoint for immediate results)
         apify_url = f'https://api.apify.com/v2/acts/apify~instagram-reel-scraper/run-sync-get-dataset-items?token={APIFY_TOKEN}'
@@ -92,13 +88,11 @@ def extract_caption():
         }
         
         print(f"Calling Apify API...", file=sys.stderr)
-        print(f"Payload: {payload}", file=sys.stderr)
         
         # Make request to Apify (with timeout)
         response = requests.post(apify_url, json=payload, headers=headers, timeout=60)
         
         print(f"Apify response status: {response.status_code}", file=sys.stderr)
-        print(f"Apify response body (first 1000 chars): {response.text[:1000]}", file=sys.stderr)
         
         # Try to parse response regardless of status code
         try:
@@ -127,6 +121,7 @@ def extract_caption():
                 'success': False,
                 'error': 'Unexpected response format from Apify'
             }), 500
+        
         print(f"Apify returned {len(results)} results", file=sys.stderr)
         
         # Check if we got results
@@ -140,7 +135,6 @@ def extract_caption():
         # Extract the first result
         post_data = results[0]
         print(f"Successfully extracted data for post: {post_data.get('shortCode', 'unknown')}", file=sys.stderr)
-        print(f"Caption length: {len(post_data.get('caption', ''))}", file=sys.stderr)
         print(f"===== EXTRACTION COMPLETED =====", file=sys.stderr)
         
         # Return cleaned data
