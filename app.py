@@ -15,10 +15,20 @@ def home():
     """Serve the home page"""
     return send_from_directory('static', 'home.html')
 
+@app.route('/projects')
+def projects():
+    """Serve the projects page"""
+    return send_from_directory('static', 'projects.html')
+
 @app.route('/recipe')
 def recipe():
     """Serve the recipe extractor page"""
     return send_from_directory('static', 'recipe.html')
+
+@app.route('/workout-tracker')
+def workout_tracker():
+    """Serve the workout tracker page"""
+    return send_from_directory('static', 'workout-tracker.html')
 
 @app.route('/health', methods=['GET'])
 def health():
