@@ -80,21 +80,23 @@
             padding: 40px;
         }
         
-        .nav-home {
-            display: inline-block;
+        .breadcrumb {
             margin-bottom: 20px;
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
             font-size: 0.9rem;
+            color: #666;
         }
         
-        .nav-home:hover {
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
             text-decoration: underline;
         }
         
-        .nav-home::before {
-            content: "← ";
+        .breadcrumb span {
+            margin: 0 8px;
         }
         
         h1 {
@@ -316,7 +318,13 @@
 </head>
 <body>
     <div class="container">
-        <a href="/" class="nav-home">Back to Home</a>
+        <nav class="breadcrumb">
+            <a href="/">Home</a>
+            <span>/</span>
+            <a href="/projects">Projects</a>
+            <span>/</span>
+            <span>Instagram Recipe Extractor</span>
+        </nav>
         
         <div class="support-banner">
             <div class="banner-text">
