@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6XY2VHG7D6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6XY2VHG7D6');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Enabled Workout Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .breadcrumb span {
+            margin: 0 8px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            background: #FFA500;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .content-section {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+        
+        .content-section h2 {
+            color: #333;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+        
+        .content-section p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        
+        .content-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        
+        .content-section li {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            font-size: 1rem;
+        }
+        
+        .content-section li::before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+        
+        .tech-stack {
+            background: #e8f0fe;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .tech-stack strong {
+            color: #333;
+            font-size: 1.05rem;
+        }
+        
+        .emoji-header {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="/">Home</a>
+            <span>/</span>
+            <a href="/projects">Projects</a>
+            <span>/</span>
+            <span>AI Enabled Workout Tracker</span>
+        </nav>
+        
+        <h1>🏋️ AI Enabled Workout Tracker</h1>
+        <p class="subtitle">Record workouts and create charts/graphs from workout data all via AI chat bot</p>
+        
+        <div class="status-badge">Not publicly available yet!</div>
+        
+        <div class="video-container">
+            <iframe 
+                src="https://www.youtube.com/embed/yYFRhIXX2Wo" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
+        
+        <div class="content-section">
+            <h2 class="emoji-header">🏋️ Build an AI-Powered Workout Tracker That Actually Works</h2>
+            
+            <p>Tired of complicated fitness apps and messy spreadsheets? In this video, I show you how I built a workout tracking system using AI that lets me take quick, unstructured notes at the gym and automatically organizes everything into a database.</p>
+            
+            <p><strong>The Problem:</strong> Paper logs get lost, spreadsheets become messy, and apps require tedious form-filling for every set.</p>
+            
+            <p><strong>My Solution:</strong> Jot down quick notes like "leg day - squats 135x8, 185x6, 225x4" and let AI handle the rest.</p>
+            
+            <p><strong>What This System Does:</strong></p>
+            <ul>
+                <li>Interprets messy workout notes and stores them in a SQL database</li>
+                <li>Creates charts, analytics, and progress tracking on demand</li>
+                <li>Generates AI-powered workout recommendations based on your history</li>
+                <li>Automatically adds new exercises to the database</li>
+            </ul>
+            
+            <div class="tech-stack">
+                <p><strong>Tech Stack:</strong> Claude AI + Cloudflare D1 (SQLite database) + Claude Projects</p>
+            </div>
+            
+            <p style="margin-top: 20px;">This is a live demo showing both the successes and limitations of AI - including moments where it gets things wrong. Perfect for anyone interested in fitness tracking, AI automation, or building practical AI applications.</p>
+            
+            <p><strong>💪 No more excuses - just quick notes and let AI do the heavy lifting!</strong></p>
+        </div>
+    </div>
+</body>
+</html>
