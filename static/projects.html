@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6XY2VHG7D6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6XY2VHG7D6');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Nick's Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .breadcrumb span {
+            margin: 0 8px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1rem;
+        }
+        
+        .projects-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .project-card {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 30px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .project-icon {
+            font-size: 4rem;
+            text-align: center;
+        }
+        
+        .project-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .project-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        
+        .project-blurb {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .project-btn {
+            display: inline-block;
+            align-self: flex-start;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+        }
+        
+        .project-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .project-card {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .project-btn {
+                align-self: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="/">Home</a>
+            <span>/</span>
+            <span>Projects</span>
+        </nav>
+        
+        <h1>Projects</h1>
+        <p class="subtitle">Tools and experiments I've built</p>
+        
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-icon">🍝</div>
+                <div class="project-content">
+                    <div class="project-name">Instagram Recipe Extractor</div>
+                    <div class="project-blurb">Extract recipe captions from Instagram Reels</div>
+                    <a href="/recipe" class="project-btn">View Project →</a>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <div class="project-icon">🏋️</div>
+                <div class="project-content">
+                    <div class="project-name">AI Enabled Workout Tracker</div>
+                    <div class="project-blurb">Record workouts and create charts/graphs from workout data all via AI chat bot</div>
+                    <a href="/workout-tracker" class="project-btn">View Project →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
