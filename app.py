@@ -30,6 +30,11 @@ def workout_tracker():
     """Serve the workout tracker page"""
     return send_from_directory('static', 'workout-tracker.html')
 
+@app.route('/feet')
+def feet():
+    """Serve the feet page"""
+    return send_from_directory('static', 'feet.html')
+
 @app.route('/health', methods=['GET'])
 def health():
     """Health check endpoint"""
